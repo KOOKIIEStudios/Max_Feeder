@@ -1,7 +1,7 @@
 """This bot periodically checks a RSS Feed for updates
 
 This bot will keep track of the latest posts of the
-Orange Mushroom Blog, and post to Dicord whenever there
+Orange Mushroom's Blog, and post to Dicord whenever there
 is a new post.
 """
 
@@ -15,16 +15,31 @@ import feeder  # User-defined Modules
 
 
 # Load config
-with open(os.path.dirname(os.path.abspath(__file__)) + '/config.json', 'r') as f:
+JSON_PATH = os.path.dirname(os.path.abspath(__file__)) + "/config.json"  # Constant
+with open(JSON_PATH, 'r') as f:
 	config = json.load(f)
 
 # Creating an instance of the bot client
 bot = commands.Bot("!")  # commands not used currently; open for future extension
 
-@tasks.loop(hours=12)
+@tasks.loop(hours=config['DELAY'])
 async def check_for_new(ctx):
-    # Checks for new posts every 12 hours
-	# Logic goes here
+    """Checks for new posts every 12 hours"""
+	latest_post = await feeder.fetch_latest_post()
+	# If there is a new post
+	if latest_post.get('id') > config['LAST_POST']:
+		print(f"New post found! Title: {latest_post.get('title')}")
+		# Update stored ID for last fetched post 
+		temp = config
+		temp['LAST_POST'] = latest_post.get('id')
+		with open(JSON_PATH, 'w') as f:
+			json.dump(temp, f)
+	
+		# Send link of post as message body to the kms-updates channel in Azure
+		channel = bot.get_channel(config['CHANNEL_ID'])
+		await channel.send(latest_post.get('link'))
+	else:
+		print("No new post on Orange Mushroom's Blog.")
 
 @bot.event
 async def on_ready():
@@ -33,9 +48,9 @@ async def on_ready():
 
 def main():
 	print("Loading bot...")
-	# bot.run(config['BOT_TOKEN'])
 	if not feeder.fetch_latest_post():  # terminate bot if feeder does not return a String
 		raise SystemExit("There seems to be something wrong with the feed parser! TERMINATING...")
+	bot.run(config['BOT_TOKEN'])
 
 
 if __name__ == '__main__':
