@@ -3,8 +3,6 @@ A Discord Bot that makes a post whenever there is a new post on Orange Mushroom 
 A launcher script (`start.bat`) has been provided in the root of the repository.  
 You may run this batch file to start the bot after configuring `src/config.json`.  
 
-You will need to generate your `VENV` prior to use. Refer to [Lazuli's Wiki](https://github.com/TEAM-SPIRIT-Productions/Lazuli/wiki/Technical-Details#step-1-generate-the-virtual-environment) for details on how to do so.  
-
 ## Technical Details
 |  | Target Minimum | Target Maximum |
 |---|---|---|
@@ -13,3 +11,18 @@ You will need to generate your `VENV` prior to use. Refer to [Lazuli's Wiki](htt
 NOTE: Please do **not** use Python versions other than 3.6 because:
 1. f-strings are used - *requires 3.6 or newer*
 2. Discord.py library is used - *requires 3.6 or older*
+
+## How to Use
+*This assumes you already have a bot added to the Azure server*
+
+ 1. Install Python 3.6
+    - Remember to add it to PATH
+ 2. Clone the repo
+    - Or, download a [release](https://github.com/KOOKIIEStudios/Max_Feeder/releases)
+ 3. Setup your virtual environment
+    - You will need to generate your `VENV` prior to use. Refer to [Lazuli's Wiki](https://github.com/TEAM-SPIRIT-Productions/Lazuli/wiki/Technical-Details#step-1-generate-the-virtual-environment) for details on how to do so
+    - A `requirements.txt` file has been generated for this repo, for your convenience
+ 4. Configure the `src/config.json` file
+    - Replace `INSERT_YOUR_BOT_TOKEN` in the file with your bot token
+    - (Optional) Replace the value for `LAST_POST` with `0` to force the bot to fetch the newest post
+ 5. Run `start.bat`
