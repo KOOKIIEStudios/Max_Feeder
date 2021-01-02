@@ -7,7 +7,6 @@ is a new post.
 
 import os  # Standard Library
 import json
-from datetime import datetime, timdelta
 import discord  # Required Modules
 from discord.ext import commands, tasks
 
@@ -23,23 +22,24 @@ with open(JSON_PATH, 'r') as f:
 bot = commands.Bot("!")  # commands not used currently; open for future extension
 
 @tasks.loop(hours=config['DELAY'])
-async def check_for_new(ctx):
-    """Checks for new posts every 12 hours"""
-	latest_post = await feeder.fetch_latest_post()
+async def check_for_new():
+	"""Checks for new posts every 12 hours"""
+	latest_post = feeder.fetch_latest_post()
 	# If there is a new post
-	if latest_post.get('id') > config['LAST_POST']:
+	if int(latest_post.get('id')) > config['LAST_POST']:
 		print(f"New post found! Title: {latest_post.get('title')}")
 		# Update stored ID for last fetched post 
 		temp = config
 		temp['LAST_POST'] = latest_post.get('id')
 		with open(JSON_PATH, 'w') as f:
 			json.dump(temp, f)
-	
+
 		# Send link of post as message body to the kms-updates channel in Azure
 		channel = bot.get_channel(config['CHANNEL_ID'])
 		await channel.send(latest_post.get('link'))
+		print(f"Link sent to Discord channel {config['CHANNEL_ID'}: {latest_post.get('link')}")  # for debug
 	else:
-		print("No new post on Orange Mushroom's Blog.")
+		print(f"No new post on Orange Mushroom's Blog. Will try again in {config['DELAY']}hours time.")
 
 @bot.event
 async def on_ready():
