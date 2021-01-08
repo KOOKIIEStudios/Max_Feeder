@@ -1,3 +1,7 @@
+"""Simple module that fetches the newest post from Orange Mushroom's Blog
+
+@author KOOKIIE
+"""
 import feedparser
 
 

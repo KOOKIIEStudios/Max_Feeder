@@ -1,5 +1,6 @@
 """This bot periodically checks a RSS Feed for updates
 
+@author KOOKIIE
 This bot will keep track of the latest posts of the
 Orange Mushroom's Blog, and post to Dicord whenever there
 is a new post.
