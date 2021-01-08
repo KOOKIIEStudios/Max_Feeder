@@ -17,7 +17,6 @@ def fetch_latest_post():
 		newest_post = {	 # Extract relevant info only
 	        'title': entry.title,
 	        'link': entry.link,
-	        'id': entry.id.split('=')[1]
 		}
 		return newest_post
 	except Exception as e:

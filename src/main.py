@@ -7,6 +7,7 @@ is a new post.
 
 import os  # Standard Library
 import json
+from datetime import date
 import discord  # Required Modules
 from discord.ext import commands, tasks
 
@@ -25,19 +26,28 @@ bot = commands.Bot("!")  # commands not used currently; open for future extensio
 async def check_for_new():
 	"""Checks for new posts every 12 hours"""
 	latest_post = feeder.fetch_latest_post()
+
+	year = int(latest_post.get('link')[27:31].strip("0"))  # Extract date from the link
+	month = int(latest_post.get('link')[32:34].strip("0"))
+	day = int(latest_post.get('link')[35:37].strip("0"))
+	current_post_date = date(year, month, day)
+
+	last_post_date = date(config['YEAR'], config['MONTH'], config['DAY'])  # Fetch last known post date
 	# If there is a new post
-	if int(latest_post.get('id')) > config['LAST_POST']:
+	if current_post_date > last_post_date:
 		print(f"New post found! Title: {latest_post.get('title')}")
-		# Update stored ID for last fetched post 
+		# Update stored date for last fetched post
 		temp = config
-		temp['LAST_POST'] = latest_post.get('id')
-		with open(JSON_PATH, 'w') as f:
-			json.dump(temp, f)
+		temp['YEAR'] = year
+		temp['MONTH'] = month
+		temp['DAY'] = day
+		with open(JSON_PATH, 'w') as file:
+			json.dump(temp, file, indent=4)
 
 		# Send link of post as message body to the kms-updates channel in Azure
 		channel = bot.get_channel(config['CHANNEL_ID'])
-		await channel.send(latest_post.get('link'))
-		print(f"Link sent to Discord channel {config['CHANNEL_ID'}: {latest_post.get('link')}")  # for debug
+		await channel.send("This is a test by KOOKIIE" + latest_post.get('link'))
+		print(f"Link sent to Discord channel {config['CHANNEL_ID']}: {latest_post.get('link')}")  # for debug
 	else:
 		print(f"No new post on Orange Mushroom's Blog. Will try again in {config['DELAY']}hours time.")
 
