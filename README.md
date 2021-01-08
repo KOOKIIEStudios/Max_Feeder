@@ -24,5 +24,4 @@ NOTE: Please do **not** use Python versions other than 3.6 because:
     - A `requirements.txt` file has been generated for this repo, for your convenience
  4. Configure the `src/config.json` file
     - Replace `INSERT_YOUR_BOT_TOKEN` in the file with your bot token
-    - (Optional) Replace the value for `LAST_POST` with `0` to force the bot to fetch the newest post
  5. Run `start.bat`
