@@ -47,7 +47,7 @@ async def check_for_new():
 
 		# Send link of post as message body to the kms-updates channel in Azure
 		channel = bot.get_channel(config['CHANNEL_ID'])
-		await channel.send("This is a test by KOOKIIE" + latest_post.get('link'))
+		await channel.send(latest_post.get('link'))
 		print(f"Link sent to Discord channel {config['CHANNEL_ID']}: {latest_post.get('link')}")  # for debug
 	else:
 		print(f"No new post on Orange Mushroom's Blog. Will try again in {config['DELAY']}hours time.")
