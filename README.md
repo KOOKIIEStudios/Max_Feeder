@@ -20,8 +20,9 @@ NOTE: Please do **not** use Python versions other than 3.6 because:
  2. Clone the repo
     - Or, download a [release](https://github.com/KOOKIIEStudios/Max_Feeder/releases)
  3. Setup your virtual environment
-    - You will need to generate your `VENV` prior to use. Refer to [Lazuli's Wiki](https://github.com/TEAM-SPIRIT-Productions/Lazuli/wiki/Technical-Details#step-1-generate-the-virtual-environment) for details on how to do so
-    - A `requirements.txt` file has been generated for this repo, for your convenience
+    - You will need to generate your `VENV` prior to use. Refer to [Lazuli's Wiki](https://github.com/TEAM-SPIRIT-Productions/Lazuli/wiki/Technical-Details#step-1-generate-the-virtual-environment) for details on how to do so manually
+      - A `requirements.txt` file has been generated for this repo, for your convenience
+    - You may run [setup.bat](https://github.com/KOOKIIEStudios/Max_Feeder/blob/main/setup.bat) to generate it automatically instead.
  4. Configure the `src/config.json` file
     - Replace `INSERT_YOUR_BOT_TOKEN` in the file with your bot token
  5. Run `start.bat`
