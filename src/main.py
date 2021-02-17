@@ -21,7 +21,7 @@ with open(JSON_PATH, 'r') as f:
 	config = json.load(f)
 
 # Creating an instance of the bot client
-bot = commands.Bot("!")  # commands not used currently; open for future extension
+bot = commands.Bot(help_command=None)  # commands not used currently; open for future extension
 
 @tasks.loop(hours=config['DELAY'])
 async def check_for_new():
