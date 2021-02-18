@@ -6,11 +6,12 @@ Orange Mushroom's Blog, and post to Dicord whenever there
 is a new post.
 """
 
-import os  # Standard Library
+import os  # Standard Libraries
 import json
 from datetime import date
 import discord  # Required Modules
 from discord.ext import commands, tasks
+from discord.ext.commands import has_permissions
 
 import feeder  # User-defined Modules
 
@@ -21,7 +22,12 @@ with open(JSON_PATH, 'r') as f:
 	config = json.load(f)
 
 # Creating an instance of the bot client
-bot = commands.Bot(help_command=None)  # commands not used currently; open for future extension
+intents = discord.Intents.default()  # Set intents
+intents.members = config['MEMBER_INTENT']  # This is required for roles to work
+intents.typing = config['TYPING_INTENT']  # Set False to reduce spam
+# intents.presences = config['PRESENCE_INTENT']  # Set False to reduce spam
+bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], help_command=None)
+
 
 @tasks.loop(hours=config['DELAY'])
 async def check_for_new():
@@ -52,15 +58,34 @@ async def check_for_new():
 	else:
 		print(f"No new post on Orange Mushroom's Blog. Will try again in {config['DELAY']}hours time.")
 
+
 @bot.event
 async def on_ready():
 	print("Bot has successfully started!")
 	await check_for_new.start()
 
+
+@bot.event
+async def on_member_join(member):
+	"""
+	When a member joins assign them a role from config.json
+	"""
+	print(f"{member} has joined the discord server!")
+	if config['ADD_ROLE']:  # Turn on or off in config.json
+		print(f"Attempting to add role for {member}.")
+		try:
+			role = discord.utils.get(member.guild.roles, id=config['PLAYER'])
+			await member.add_roles(role)
+		except Exception as e:
+			print(f"Error encountered while attempting to assign role:\n  {e}")
+
+
 def main():
 	print("Loading bot...")
+	print("Running self-checks...")
 	if not feeder.fetch_latest_post():  # terminate bot if feeder does not return a String
 		raise SystemExit("There seems to be something wrong with the feed parser! TERMINATING...")
+	print("Self-checks passed! RSS feed parse is working correctly.")
 	bot.run(config['BOT_TOKEN'])
 
 

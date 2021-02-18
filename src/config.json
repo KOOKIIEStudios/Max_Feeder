@@ -4,5 +4,11 @@
     "CHANNEL_ID": 782622961940430848,
     "YEAR": 2021,
     "MONTH": 1,
-    "DAY": 6
+    "DAY": 27,
+    "COMMAND_PREFIX": "$",
+    "MEMBER_INTENT": true,
+    "TYPING_INTENT": false,
+    "PRESENCE_INTENT": false,
+    "ADD_ROLE": true,
+    "PLAYER": 608387385474154503
 }
