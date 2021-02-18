@@ -26,7 +26,11 @@ intents = discord.Intents.default()  # Set intents
 intents.members = config['MEMBER_INTENT']  # This is required for roles to work
 intents.typing = config['TYPING_INTENT']  # Set False to reduce spam
 # intents.presences = config['PRESENCE_INTENT']  # Set False to reduce spam
-bot = commands.Bot(command_prefix=config['COMMAND_PREFIX'], help_command=None)
+bot = commands.Bot(
+	command_prefix=config['COMMAND_PREFIX'],
+	help_command=None,
+	intents=intents,
+)
 
 
 @tasks.loop(hours=config['DELAY'])

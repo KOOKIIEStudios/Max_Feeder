@@ -19,8 +19,8 @@ def fetch_latest_post():
 		feeder = feedparser.parse("https://orangemushroom.net/feed/")
 		entry = feeder.entries[0]  # Newest post will be first element
 		newest_post = {	 # Extract relevant info only
-	        'title': entry.title,
-	        'link': entry.link,
+			'title': entry.title,
+			'link': entry.link,
 		}
 		return newest_post
 	except Exception as e:
