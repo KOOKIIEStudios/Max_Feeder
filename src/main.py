@@ -2,7 +2,7 @@
 
 @author KOOKIIE
 This bot will keep track of the latest posts of the
-Orange Mushroom's Blog, and post to Dicord whenever there
+Orange Mushroom's Blog, and post to Discord whenever there
 is a new post.
 """
 
@@ -25,7 +25,7 @@ with open(JSON_PATH, 'r') as f:
 intents = discord.Intents.default()  # Set intents
 intents.members = config['MEMBER_INTENT']  # This is required for roles to work
 intents.typing = config['TYPING_INTENT']  # Set False to reduce spam
-# intents.presences = config['PRESENCE_INTENT']  # Set False to reduce spam
+intents.presences = config['PRESENCE_INTENT']  # Set False to reduce spam
 bot = commands.Bot(
 	command_prefix=config['COMMAND_PREFIX'],
 	help_command=None,
@@ -67,12 +67,18 @@ async def check_for_new():
 async def on_ready():
 	print("Bot has successfully started!")
 	await check_for_new.start()
+	print(f"RSS feed parse service started! (Runs every {config['DELAY']} hours)")
+	# Monolith architecture: check_for_new added here
+	# Optional to refactor out to a Cog
 
 
 @bot.event
 async def on_member_join(member):
 	"""
 	When a member joins assign them a role from config.json
+
+	Uses Role ID instead of names because SoulGirlJP uses Korean characters
+	in the role names, which may or may not cause encoding-related issues.
 	"""
 	print(f"{member} has joined the discord server!")
 	if config['ADD_ROLE']:  # Turn on or off in config.json
