@@ -14,6 +14,7 @@ from discord.ext import commands, tasks
 
 import feeder  # User-defined Modules
 import constants
+import azure_commands
 
 # Load config
 print("Loading Max_Feeder bot...")
@@ -101,6 +102,8 @@ async def on_member_join(member):
 async def turn_commands_off(ctx):
 	"""Allows turning Azure-related commands off"""
 	global COMMANDS_ON
+	if await azure_commands.is_help(ctx, "commandsoff"):
+		return
 	try:
 		bot.unload_extension("azure_commands")
 		COMMANDS_ON = False
@@ -119,6 +122,8 @@ async def turn_commands_off(ctx):
 async def turn_commands_on(ctx):
 	"""Allows turning Azure-related commands off"""
 	global COMMANDS_ON
+	if await azure_commands.is_help(ctx, "commandson"):
+		return
 	try:
 		bot.load_extension("azure_commands")
 		COMMANDS_ON = True
@@ -136,7 +141,7 @@ def append_command_toggle(ctx, output):
 	"""Appends staff-only commands"""
 	for role in ctx.author.roles:
 		if role.id in constants.STAFF.values():
-			output += "\ncommandson\ncommandsoff"
+			output += "\ncommandson\ncommandsoff\nreload"
 	return output
 
 
@@ -155,6 +160,23 @@ async def list_commands(ctx):
 		output = append_command_toggle(ctx, output)
 		output += "\nCommands are not currently enabled."
 		await ctx.send(output)
+
+
+@bot.command(name='reload', pass_context=True)
+@commands.has_any_role(*constants.STAFF.values())
+async def reload_cogs(ctx):
+	"""
+	Command for reloading azure-related commands
+	"""
+	if await azure_commands.is_help(ctx, "reload"):
+		return
+	try:
+		bot.reload_extension('azure_commands')
+		print("Successfully reloaded commands!")
+		await ctx.send("Successfully reloaded commands!")
+	except Exception as e:
+		print(f"Error occurred while reloading commands: \n {e}")
+		await ctx.send("Error occurred while reloading commands. Check logs for details.")
 
 
 def main():

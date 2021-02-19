@@ -76,6 +76,15 @@ COMMANDS = {
 		'aliases': ["setup", "faq", "316", "v316"],
 		'description': "Provides v316 wiki links.",
 	},
+	'commandsoff': {
+		'description': "Turns Azure-related commands off.",
+	},
+	'commandson': {
+		'description': "Turns Azure-related commands on.",
+	},
+	'reload': {
+		'description': "Reloads Azure-related commands.",
+	},
 }
 
 # Staff Roles

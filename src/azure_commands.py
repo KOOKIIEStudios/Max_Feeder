@@ -60,6 +60,7 @@ async def is_help(ctx, command):
 		return False
 	elif args[1] == "help":
 		output = "**Description:** " + constants.COMMANDS.get(command).get('description')
-		output += "\n**Aliases:** " + ", ".join(constants.COMMANDS.get(command).get('aliases'))
+		if constants.COMMANDS.get(command).get('aliases') is not None:
+			output += "\n**Aliases:** " + ", ".join(constants.COMMANDS.get(command).get('aliases'))
 		await ctx.send(output)
 		return True
