@@ -11,15 +11,16 @@ import json
 from datetime import date
 import discord  # Required Modules
 from discord.ext import commands, tasks
-from discord.ext.commands import has_permissions
 
 import feeder  # User-defined Modules
-
+import constants
 
 # Load config
+print("Loading Max_Feeder bot...")
 JSON_PATH = os.path.dirname(os.path.abspath(__file__)) + "/config.json"  # Constant
 with open(JSON_PATH, 'r') as f:
 	config = json.load(f)
+print("Config file loaded")
 
 # Creating an instance of the bot client
 intents = discord.Intents.default()  # Set intents
@@ -31,6 +32,11 @@ bot = commands.Bot(
 	help_command=None,
 	intents=intents,
 )
+print("Intents and Privileges configured")
+# Load commands
+bot.load_extension("azure_commands")
+print("Extension: 'azure_commands' loaded")
+COMMANDS_ON = True  # Global variable to track status
 
 
 @tasks.loop(hours=config['DELAY'])
@@ -90,8 +96,68 @@ async def on_member_join(member):
 			print(f"Error encountered while attempting to assign role:\n  {e}")
 
 
+@bot.command(name='commandsoff', pass_context=True)
+@commands.has_any_role(*constants.STAFF.values())
+async def turn_commands_off(ctx):
+	"""Allows turning Azure-related commands off"""
+	global COMMANDS_ON
+	try:
+		bot.unload_extension("azure_commands")
+		COMMANDS_ON = False
+		print("Commands turned off")
+		await ctx.send("Commands turned off")
+	except commands.ExtensionNotLoaded:
+		print(f"Commands are already off!")
+		await ctx.send("Commands are already off!")
+	except Exception as e:
+		print(f"Error encountered while attempting to unload extensions:\n  {e}")
+		await ctx.send("An error has occurred. Please check the logs.")
+
+
+@bot.command(name='commandson', pass_context=True)
+@commands.has_any_role(*constants.STAFF.values())
+async def turn_commands_on(ctx):
+	"""Allows turning Azure-related commands off"""
+	global COMMANDS_ON
+	try:
+		bot.load_extension("azure_commands")
+		COMMANDS_ON = True
+		print("Commands turned on")
+		await ctx.send("Commands turned on")
+	except commands.ExtensionAlreadyLoaded:
+		print(f"Commands are already on!")
+		await ctx.send("Commands are already on!")
+	except Exception as e:
+		print(f"Error encountered while attempting to load extensions:\n  {e}")
+		await ctx.send("An error has occurred. Please check the logs.")
+
+
+def append_command_toggle(ctx, output):
+	"""Appends staff-only commands"""
+	for role in ctx.author.roles:
+		if role.id in constants.STAFF.values():
+			output += "\ncommandson\ncommandsoff"
+	return output
+
+
+@bot.command(name='commands', pass_context=True)
+async def list_commands(ctx):
+	"""Returns list of available commands, if enabled"""
+	global COMMANDS_ON
+	output = "**Commands:**\n----------\n"
+	if COMMANDS_ON:
+		user_cog = bot.get_cog('AzureCommands')
+		cmd_list = [command.name for command in user_cog.get_commands()]
+		output += "\n".join(cmd_list)
+		output = append_command_toggle(ctx, output)
+		await ctx.send(output)
+	else:
+		output = append_command_toggle(ctx, output)
+		output += "\nCommands are not currently enabled."
+		await ctx.send(output)
+
+
 def main():
-	print("Loading bot...")
 	print("Running self-checks...")
 	if not feeder.fetch_latest_post():  # terminate bot if feeder does not return a String
 		raise SystemExit("There seems to be something wrong with the feed parser! TERMINATING...")
