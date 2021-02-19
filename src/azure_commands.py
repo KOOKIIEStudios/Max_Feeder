@@ -49,6 +49,30 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 		if not await is_help(ctx, "wiki"):
 			await ctx.send(constants.WIKI)
 
+	@commands.command(name="say")
+	async def say(self, ctx):
+		if await is_help(ctx, "say"):
+			return  # Short-circuit if it's just a 'help'
+		args = ctx.message.content.split(" ")
+		if len(args) < 3:  # sanity check
+			await ctx.send("Please provide all necessary arguments! `$say <channel> <message>`")
+			return
+		channel_name = args[1]
+		msg = args[2:]
+
+		channel_id = 0
+		for chnl in constants.channels.values():
+			names = chnl.get('aliases')
+			if channel_name in names:
+				channel_id = chnl.get('channel_ID')
+				break
+		if channel_id == 0:
+			await ctx.send("Invalid channel name!")
+			return
+
+		channel = self.bot.get_channel(channel_id)
+		await channel.send(" ".join(msg))
+
 
 def setup(bot):
 	bot.add_cog(AzureCommands(bot))

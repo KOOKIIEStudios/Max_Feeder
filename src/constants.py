@@ -85,6 +85,9 @@ COMMANDS = {
 	'reload': {
 		'description': "Reloads Azure-related commands.",
 	},
+	'say': {
+		'description': "Forwards a message to a desired server.",
+	},
 }
 
 # Staff Roles
@@ -95,4 +98,68 @@ STAFF = {
 	"skynet": 610818770327437323,
 	"gm": 609955277122306051,
 	"discord_mod": 608497409315700750,
+}
+# ------------------------------------------------------------------------------
+# Channel IDs & Aliases
+channels = {
+	'kms': {
+		'aliases': ["kms", "kms-updates"],
+		'channel_ID': 782622961940430848,
+	},
+	'gitexternal': {
+		'aliases': ["gitexternal", "git-updates"],
+		'channel_ID': 753250863736160436,
+	},
+	'setup': {
+		'aliases': ["setup", "server-setup-guide"],
+		'channel_ID': 753250340509581364,
+	},
+	'rules': {
+		'aliases': ["rules"],
+		'channel_ID': 661403153391943683,
+	},
+	'announcements': {
+		'aliases': ["announcements"],
+		'channel_ID': 608383892965294108,
+	},
+	'updates': {
+		'aliases': ["updates"],
+		'channel_ID': 608383831275470848,
+	},
+	'teasers': {
+		'aliases': ["teasers"],
+		'channel_ID': 794303737815760956,
+	},
+	'faq': {
+		'aliases': ["faq"],
+		'channel_ID': 793183592066449420,
+	},
+	'general': {
+		'aliases': ["general"],
+		'channel_ID': 608382980196532296,
+	},
+	'offtopic': {
+		'aliases': ["offtopic", "off-topic"],
+		'channel_ID': 662470116134486056,
+	},
+	'help': {
+		'aliases': ["help"],
+		'channel_ID': 608384884041580589,
+	},
+	'dev': {
+		'aliases': ["dev", "server-development"],
+		'channel_ID': 799839206549225472,
+	},
+	'market': {
+		'aliases': ["market", "main-street"],
+		'channel_ID': 734650313021325344,
+	},
+	'staff': {
+		'aliases': ["staff", "staffgeneral", "staff-general"],
+		'channel_ID': 608385510435717140,
+	},
+	'gitinternal': {
+		'aliases': ["gitinternal", "gitupdates"],
+		'channel_ID': 690032169309175809,
+	},
 }
