@@ -90,7 +90,7 @@ COMMANDS = {
 	},
 }
 
-# Staff Roles
+# Staff Roles-ID mapping
 STAFF = {
 	"owner": 608387039624298528,
 	"dev": 608511788165890050,

@@ -19,6 +19,7 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 	# and perform pattern matching inside the handler
 	# instead of using 6 identical commands.
 	# But that might be over-engineering.
+	# Information commands - outputs string constants to Discord
 	@commands.command(aliases=constants.COMMANDS.get('warp').get('aliases'))
 	async def warp(self, ctx):
 		if not await is_help(ctx, "warp"):
@@ -49,10 +50,14 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 		if not await is_help(ctx, "wiki"):
 			await ctx.send(constants.WIKI)
 
+	# Other commands
 	@commands.command(name="say")
 	async def say(self, ctx):
+		"""Redirects messages to a desired channel"""
 		if await is_help(ctx, "say"):
 			return  # Short-circuit if it's just a 'help'
+
+		# process message contents
 		args = ctx.message.content.split(" ")
 		if len(args) < 3:  # sanity check
 			await ctx.send("Please provide all necessary arguments! `$say <channel> <message>`")
@@ -60,6 +65,7 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 		channel_name = args[1]
 		msg = args[2:]
 
+		# map channel name/alias to ID
 		channel_id = 0
 		for chnl in constants.channels.values():
 			names = chnl.get('aliases')
@@ -70,15 +76,31 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 			await ctx.send("Invalid channel name!")
 			return
 
+		# direct message to the appropriate channel
 		channel = self.bot.get_channel(channel_id)
 		await channel.send(" ".join(msg))
 
 
-def setup(bot):
+def setup(bot):  # discord.py construct
 	bot.add_cog(AzureCommands(bot))
 
 
 async def is_help(ctx, command):
+	"""Show help messages for commands
+
+	Used in every command.
+	Checks if 2nd word in message is `help`. If so, output (to Discord)
+	the description and aliases for the command being queried.
+	e.g. `$warp help`
+
+	Args:
+		ctx: Message context (discord.py construct)
+		command: String, representing the command being queried
+
+	Returns:
+		True, if 2nd word is `help`
+		False, if 2nd word is not `help`
+	"""
 	args = ctx.message.content.split(" ")
 	if len(args) < 2:
 		return False

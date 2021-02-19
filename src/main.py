@@ -138,7 +138,15 @@ async def turn_commands_on(ctx):
 
 
 def append_command_toggle(ctx, output):
-	"""Appends staff-only commands"""
+	"""Appends staff-only commands
+
+	Used by list_commands()
+
+	Args:
+		ctx: Message context (discord.py construct)
+		output: String, representing the output in list_commands,
+			that is to be mutated by append_command_toggle()
+	"""
 	for role in ctx.author.roles:
 		if role.id in constants.STAFF.values():
 			output += "\ncommandson\ncommandsoff\nreload"
@@ -150,13 +158,14 @@ async def list_commands(ctx):
 	"""Returns list of available commands, if enabled"""
 	global COMMANDS_ON
 	output = "**Commands:**\n----------\n"
-	if COMMANDS_ON:
+	if COMMANDS_ON:  # If Azure-specific commands enabled
 		user_cog = bot.get_cog('AzureCommands')
 		cmd_list = [command.name for command in user_cog.get_commands()]
 		output += "\n".join(cmd_list)
 		output = append_command_toggle(ctx, output)
 		await ctx.send(output)
 	else:
+		# Display remaining commands that are accessible
 		output = append_command_toggle(ctx, output)
 		output += "\nCommands are not currently enabled."
 		await ctx.send(output)
