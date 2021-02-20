@@ -94,8 +94,10 @@ async def is_help(ctx, command):
 	"""Show help messages for commands
 
 	Used in every command.
-	Checks if 2nd word in message is `help`. If so, output (to Discord)
-	the description and aliases for the command being queried.
+	First checks if there is only 1 (no more/less) argument following 
+	the command. Then checks if 2nd word in message is `help`.
+	If so, output (to Discord) the description and aliases for the 
+	command being queried, and return whether the above action was taken.
 	e.g. `$warp help`
 
 	Args:
@@ -104,10 +106,11 @@ async def is_help(ctx, command):
 
 	Returns:
 		True, if 2nd word is `help`
-		False, if 2nd word is not `help`
+		False, if 2nd word is not `help`, or if the number of arguments
+			is more/less than 1
 	"""
 	args = ctx.message.content.split(" ")
-	if len(args) < 2:
+	if len(args) != 2:  # Note: args includes the command itself!
 		return False
 	elif args[1] == "help":
 		output = "**Description:** " + constants.COMMANDS.get(command).get('description')
