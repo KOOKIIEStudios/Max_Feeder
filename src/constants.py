@@ -48,6 +48,8 @@ WIKI = """Azure v316 Open Source Wiki: <https://github.com/SoulGirlJP/AzureV316/
 Azure v316 Open Source Set-up Guide: <https://github.com/SoulGirlJP/AzureV316/wiki/Setup>
 Azure v316 Open Source FAQ: <https://github.com/SoulGirlJP/AzureV316/wiki/FAQ>"""
 
+CLASSES = "At the moment, only Explorer Hero is available. The other classes will come later."
+
 # ------------------------------------------------------------------------------
 # Command alias & description
 # Note: This project uses single-quotes for key-value pairs
@@ -75,6 +77,10 @@ COMMANDS = {
 	'wiki': {
 		'aliases': ["setup", "faq", "316", "v316"],
 		'description': "Provides v316 wiki links.",
+	},
+	'classes': {
+		'aliases': ["hero", "explorer", "adventurer"],
+		'description': "Explains Azure's available classes",
 	},
 	'commandsoff': {
 		'description': "Turns Azure-related commands off.",

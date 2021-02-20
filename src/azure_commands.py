@@ -50,6 +50,11 @@ class AzureCommands(commands.Cog, name='AzureCommands'):
 		if not await is_help(ctx, "wiki"):
 			await ctx.send(constants.WIKI)
 
+	@commands.command(aliases=constants.COMMANDS.get('classes').get('aliases'))
+	async def hero(self, ctx):
+		if not await is_help(ctx, "classes"):
+			await ctx.send(constants.CLASSES)
+
 	# Other commands
 	@commands.command(name="say")
 	async def say(self, ctx):
