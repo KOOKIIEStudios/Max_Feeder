@@ -188,6 +188,24 @@ async def reload_cogs(ctx):
 		await ctx.send("Error occurred while reloading commands. Check logs for details.")
 
 
+@bot.command(name='credits', pass_context=True)
+async def credit(ctx):
+	# Included Brandon as per his request
+	output = """**A *KOOKIIE Studios* Production**
+	Inspired by: *Lapis* by Brandon (GitHub: Bratah123)
+	KOOKIIE Studios: https://github.com/KOOKIIEStudios
+	Team SPIRIT: https://github.com/TEAM-SPIRIT-Productions
+	Lapis: https://github.com/TEAM-SPIRIT-Productions/Lapis/"""
+	await ctx.send(output)
+
+
+@bot.command(name='version', pass_context=True)
+async def version(ctx):
+	output = """This bot is running: **Max_Feeder v1.4.0**
+	Find the source code here: https://github.com/KOOKIIEStudios/Max_Feeder"""
+	await ctx.send(output)
+
+
 def main():
 	print("Running self-checks...")
 	if not feeder.fetch_latest_post():  # terminate bot if feeder does not return a String
