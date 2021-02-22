@@ -149,7 +149,7 @@ channels = {
 		'channel_ID': 662470116134486056,
 	},
 	'help': {
-		'aliases': ["help", "--help"],
+		'aliases': ["help"],
 		'channel_ID': 608384884041580589,
 	},
 	'dev': {
