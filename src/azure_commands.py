@@ -112,7 +112,10 @@ async def is_help(ctx, command):
 	args = ctx.message.content.split(" ")
 	if len(args) != 2:  # Note: args includes the command itself!
 		return False
-	elif args[1] == "help":
+	elif (
+		(args[1] == "help") or
+		(args[1] == "--help")
+	):
 		output = "**Description:** " + constants.COMMANDS.get(command).get('description')
 		if constants.COMMANDS.get(command).get('aliases') is not None:
 			output += "\n**Aliases:** " + ", ".join(constants.COMMANDS.get(command).get('aliases'))
