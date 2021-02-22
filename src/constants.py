@@ -79,7 +79,7 @@ COMMANDS = {
 		'description': "Provides v316 wiki links.",
 	},
 	'classes': {
-		'aliases': ["hero", "explorer", "adventurer"],
+		'aliases': ["classes", "explorer", "adventurer"],
 		'description': "Explains Azure's available classes",
 	},
 	'commandsoff': {
