@@ -88,6 +88,9 @@ COMMANDS = {
 	'commandson': {
 		'description': "Turns Azure-related commands on.",
 	},
+	'toggledev': {
+		'description': "Toggles (dev-info) pattern matching function on/off.",
+	},
 	'reload': {
 		'description': "Reloads Azure-related commands.",
 	},
@@ -169,3 +172,29 @@ channels = {
 		'channel_ID': 690032169309175809,
 	},
 }
+# ------------------------------------------------------------------------------
+# Known Devs
+DEVS = {
+	# RegEx: dict of details
+	'[Bb]randon': {
+		'Name': 'Brandon',
+		'Website': 'https://github.com/Bratah123/',
+		'Organisation': 'Team SPIRIT'
+	},
+	'[Dd]esc': {
+		'Name': 'Desc',
+		'Website': 'https://github.com/Descended/',
+		'Organisation': 'Team SPIRIT'
+	},
+	'[Kk][Oo][Oo][Kk][Ii][Ii][Ee]': {
+		'Name': 'KOOKIIE',
+		'Website': 'https://github.com/KOOKIIEStudios/',
+		'Organisation': 'Team SPIRIT'
+	},
+}
+
+# Bot aliases
+BOT_NAMES = [
+	"[Aa]zure",
+	"[Ss]ouly"
+]

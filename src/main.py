@@ -21,23 +21,24 @@ print("Loading Max_Feeder bot...")
 JSON_PATH = os.path.dirname(os.path.abspath(__file__)) + "/config.json"  # Constant
 with open(JSON_PATH, 'r') as f:
 	config = json.load(f)
-print("Config file loaded")
+print("  Config file loaded")
 
 # Creating an instance of the bot client
-intents = discord.Intents.default()  # Set intents
+intents = discord.Intents.default()  # Instantiate Intents object
 intents.members = config['MEMBER_INTENT']  # This is required for roles to work
 intents.typing = config['TYPING_INTENT']  # Set False to reduce spam
 intents.presences = config['PRESENCE_INTENT']  # Set False to reduce spam
-bot = commands.Bot(
+bot = commands.Bot(  # Instantiate Bot object with Intents
 	command_prefix=config['COMMAND_PREFIX'],
 	help_command=None,
 	intents=intents,
 )
-print("Intents and Privileges configured")
+print("  Intents and Privileges configured")
 # Load commands
 bot.load_extension("azure_commands")
-print("Extension: 'azure_commands' loaded")
-COMMANDS_ON = True  # Global variable to track status
+print("  Extension: 'azure_commands' loaded")
+bot.load_extension("dev")
+print("  Extension: 'dev' loaded")
 
 
 @tasks.loop(hours=config['DELAY'])
@@ -72,7 +73,7 @@ async def check_for_new():
 
 @bot.event
 async def on_ready():
-	print("Bot has successfully started!")
+	print("Bot has successfully started!\n")
 	await check_for_new.start()
 	print(f"RSS feed parse service started! (Runs every {config['DELAY']} hours)")
 	# Monolith architecture: check_for_new added here
@@ -89,10 +90,10 @@ async def on_member_join(member):
 	"""
 	print(f"{member} has joined the discord server!")
 	if config['ADD_ROLE']:  # Turn on or off in config.json
-		print(f"Attempting to add role for {member}.")
 		try:
 			role = discord.utils.get(member.guild.roles, id=config['PLAYER'])
 			await member.add_roles(role)
+			print(f"  Role 'Player' added for for {member}.")
 		except Exception as e:
 			print(f"Error encountered while attempting to assign role:\n  {e}")
 
@@ -101,12 +102,10 @@ async def on_member_join(member):
 @commands.has_any_role(*constants.STAFF.values())
 async def turn_commands_off(ctx):
 	"""Allows turning Azure-related commands off"""
-	global COMMANDS_ON
 	if await azure_commands.is_help(ctx, "commandsoff"):
 		return
 	try:
 		bot.unload_extension("azure_commands")
-		COMMANDS_ON = False
 		print("Commands turned off")
 		await ctx.send("Commands turned off")
 	except commands.ExtensionNotLoaded:
@@ -121,12 +120,10 @@ async def turn_commands_off(ctx):
 @commands.has_any_role(*constants.STAFF.values())
 async def turn_commands_on(ctx):
 	"""Allows turning Azure-related commands off"""
-	global COMMANDS_ON
 	if await azure_commands.is_help(ctx, "commandson"):
 		return
 	try:
 		bot.load_extension("azure_commands")
-		COMMANDS_ON = True
 		print("Commands turned on")
 		await ctx.send("Commands turned on")
 	except commands.ExtensionAlreadyLoaded:
@@ -134,6 +131,29 @@ async def turn_commands_on(ctx):
 		await ctx.send("Commands are already on!")
 	except Exception as e:
 		print(f"Error encountered while attempting to load extensions:\n  {e}")
+		await ctx.send("An error has occurred. Please check the logs.")
+
+
+@bot.command(name='toggledev', pass_context=True)
+@commands.has_any_role(*constants.STAFF.values())
+async def toggle_dev(ctx):
+	# Toggles pattern matching on/off
+	# Short-circuit if fetching help:
+	if await azure_commands.is_help(ctx, "toggledev"):
+		return
+
+	dev_cog = bot.get_cog('dev')  # Returns None if not loaded
+	try:
+		if dev_cog:
+			bot.unload_extension("dev")
+			print("Pattern matching turned off")
+			await ctx.send("Pattern matching turned off")
+		else:
+			bot.unload_extension("dev")
+			print("Pattern matching turned on")
+			await ctx.send("Pattern matching turned on")
+	except Exception as e:
+		print(f"Error encountered while attempting to load/unload extensions:\n  {e}")
 		await ctx.send("An error has occurred. Please check the logs.")
 
 
@@ -149,18 +169,17 @@ def append_command_toggle(ctx, output):
 	"""
 	for role in ctx.author.roles:
 		if role.id in constants.STAFF.values():
-			output += "\ncommandson\ncommandsoff\nreload"
+			output += "\ncommandson\ncommandsoff\ntoggledev\nreload"
 	return output
 
 
 @bot.command(name='commands', pass_context=True)
 async def list_commands(ctx):
 	"""Returns list of available commands, if enabled"""
-	global COMMANDS_ON
+	commands_cog = bot.get_cog('AzureCommands')  # Returns None if not loaded
 	output = "**Commands:**\n----------\n"
-	if COMMANDS_ON:  # If Azure-specific commands enabled
-		user_cog = bot.get_cog('AzureCommands')
-		cmd_list = [command.name for command in user_cog.get_commands()]
+	if commands_cog:  # If Azure-specific commands enabled
+		cmd_list = [command.name for command in commands_cog.get_commands()]
 		output += "\n".join(cmd_list)
 		output = append_command_toggle(ctx, output)
 		await ctx.send(output)
@@ -181,6 +200,7 @@ async def reload_cogs(ctx):
 		return
 	try:
 		bot.reload_extension('azure_commands')
+		bot.reload_extension('dev')
 		print("Successfully reloaded commands!")
 		await ctx.send("Successfully reloaded commands!")
 	except Exception as e:
@@ -207,10 +227,10 @@ async def version(ctx):
 
 
 def main():
-	print("Running self-checks...")
+	print("  Running self-checks...")
 	if not feeder.fetch_latest_post():  # terminate bot if feeder does not return a String
 		raise SystemExit("There seems to be something wrong with the feed parser! TERMINATING...")
-	print("Self-checks passed! RSS feed parse is working correctly.")
+	print("  Self-checks passed! RSS feed parse is working correctly.")
 	bot.run(config['BOT_TOKEN'])
 
 
