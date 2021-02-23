@@ -82,11 +82,8 @@ COMMANDS = {
 		'aliases': ["classes", "explorer", "adventurer"],
 		'description': "Explains Azure's available classes",
 	},
-	'commandsoff': {
-		'description': "Turns Azure-related commands off.",
-	},
-	'commandson': {
-		'description': "Turns Azure-related commands on.",
+	'togglecommands': {
+		'description': "Toggles Azure-related commands on/off.",
 	},
 	'toggledev': {
 		'description': "Toggles (dev-info) pattern matching function on/off.",
@@ -179,8 +176,8 @@ DEVS = {
 	'[Bb]randon': {
 		'Name': 'Brandon',
 		'Website': 'https://github.com/Bratah123/',
-		'Organisation': 'Team SPIRIT'
-	},
+		'Organization': 'Team SPIRIT'
+	},  # Brandon requested NA spelling
 	'[Dd]esc': {
 		'Name': 'Desc',
 		'Website': 'https://github.com/Descended/',

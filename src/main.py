@@ -98,46 +98,32 @@ async def on_member_join(member):
 			print(f"Error encountered while attempting to assign role:\n  {e}")
 
 
-@bot.command(name='commandsoff', pass_context=True)
+@bot.command(name='togglecommands', pass_context=True)
 @commands.has_any_role(*constants.STAFF.values())
-async def turn_commands_off(ctx):
-	"""Allows turning Azure-related commands off"""
-	if await azure_commands.is_help(ctx, "commandsoff"):
+async def toggle_commands(ctx):
+	"""Toggles Azure-related commands on/off"""
+	if await azure_commands.is_help(ctx, "togglecommands"):
 		return
-	try:
-		bot.unload_extension("azure_commands")
-		print("Commands turned off")
-		await ctx.send("Commands turned off")
-	except commands.ExtensionNotLoaded:
-		print(f"Commands are already off!")
-		await ctx.send("Commands are already off!")
-	except Exception as e:
-		print(f"Error encountered while attempting to unload extensions:\n  {e}")
-		await ctx.send("An error has occurred. Please check the logs.")
 
-
-@bot.command(name='commandson', pass_context=True)
-@commands.has_any_role(*constants.STAFF.values())
-async def turn_commands_on(ctx):
-	"""Allows turning Azure-related commands off"""
-	if await azure_commands.is_help(ctx, "commandson"):
-		return
+	commands_cog = bot.get_cog('AzureCommands')  # Returns None if not loaded
 	try:
-		bot.load_extension("azure_commands")
-		print("Commands turned on")
-		await ctx.send("Commands turned on")
-	except commands.ExtensionAlreadyLoaded:
-		print(f"Commands are already on!")
-		await ctx.send("Commands are already on!")
+		if commands_cog:
+			bot.unload_extension("azure_commands")
+			print("Commands turned off")
+			await ctx.send("Commands turned off")
+		else:
+			bot.load_extension("azure_commands")
+			print("Commands turned on")
+			await ctx.send("Commands turned on")
 	except Exception as e:
-		print(f"Error encountered while attempting to load extensions:\n  {e}")
+		print(f"Error encountered while attempting to load/unload extensions:\n  {e}")
 		await ctx.send("An error has occurred. Please check the logs.")
 
 
 @bot.command(name='toggledev', pass_context=True)
 @commands.has_any_role(*constants.STAFF.values())
 async def toggle_dev(ctx):
-	# Toggles pattern matching on/off
+	"""Toggles pattern matching on/off"""
 	# Short-circuit if fetching help:
 	if await azure_commands.is_help(ctx, "toggledev"):
 		return
@@ -149,7 +135,7 @@ async def toggle_dev(ctx):
 			print("Pattern matching turned off")
 			await ctx.send("Pattern matching turned off")
 		else:
-			bot.unload_extension("dev")
+			bot.load_extension("dev")
 			print("Pattern matching turned on")
 			await ctx.send("Pattern matching turned on")
 	except Exception as e:
@@ -169,7 +155,7 @@ def append_command_toggle(ctx, output):
 	"""
 	for role in ctx.author.roles:
 		if role.id in constants.STAFF.values():
-			output += "\ncommandson\ncommandsoff\ntoggledev\nreload"
+			output += "\ntogglecommands\ntoggledev\nreload"
 	return output
 
 
