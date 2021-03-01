@@ -31,5 +31,19 @@ NOTE: Please do **not** use Python versions older than 3.6 because:
 This update brings various new Azure-focused features.  
 You may download releases older than this version if you would like to use the initial RSS feeder-only bot.
 
+## About v2.0.1
+[CVE-2021-21330 - GitHub Advisory Database](https://github.com/advisories/GHSA-v6wp-4m6f-gcjg)  
+Following the release of the advisory (see above), we have updated dependencies to include the security patch(es).  
+
+*Note: `aiohttp` is a library used by `discord.py`, which is the basis for most Python-based bots for Discord, including `Max_Feeder`*.  
+### To grab the updates
+1. Perform `git pull`
+2. Grab the new dependencies  
+    - For Global Environment:  
+      - `pip install -r requirements.txt`  
+    - For Virtual Environment:  
+      - `venv/scripts/activate`  
+      - `pip install -r requirements.txt`  
+
 ### Disclaimer:
 *Max_Feeder is an open-source project aimed at the Discord server of a particular MapleStory server emulation project ([AzureMSv316](https://github.com/SoulGirlJP/AzureV316)). Max_Feeder is non-monetised, provided as is, and is unaffiliated with NEXON. Every effort has been taken to ensure correctness and reliability at the time of release. We will not be liable for any special, direct, indirect, or consequential damages or any damages whatsoever resulting from loss of use, data or profits, whether in an action if contract, negligence or other tortious action, arising out of or in connection with the use of Max_Feeder (in part or in whole).*
