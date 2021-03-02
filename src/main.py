@@ -207,7 +207,7 @@ async def credit(ctx):
 
 @bot.command(name='botversion', pass_context=True)
 async def version(ctx):
-	output = """This bot is running: **Max_Feeder v1.4.0**
+	output = """This bot is running: **Max_Feeder v2.0.1**
 	Find the source code here: https://github.com/KOOKIIEStudios/Max_Feeder"""
 	await ctx.send(output)
 
