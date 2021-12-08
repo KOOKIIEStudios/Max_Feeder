@@ -33,4 +33,4 @@ echo "You have selected B: Global Python Environment"
 python src/main.py
 :: echo "The bot crashed, restarting bot.."
 :: goto global
-EXIT /B 0
+EXIT
